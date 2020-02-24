@@ -118,10 +118,10 @@ ennemi.setBounce(0);
 ennemi.body.setGravityY(300);
 
 // LES COLLECTIBLES
-/* bananes = this.physics.add.sprite(50,400,"bananeidle");
+ bananes = this.physics.add.sprite(50,400,"bananeidle");
 this.physics.add.collider(bananes,platforms);
 bananes.setBounce(0);
-bananes.body.setGravityY(0); */
+bananes.body.setGravityY(0);
 
 
 // DÉPLACEMENTS JOUEUR
@@ -191,12 +191,6 @@ frameRate: 20,
 repeat:-1
 });
 
-bananes = this.physics.add.group({
-key: "bananeidle",
-repeat: 8,
-setXY: {x: 12, y: 0, stepX: 70}
-});
-
 
 
 
@@ -223,14 +217,11 @@ function hitbomb (player, bombe) {
 	}
 }
 
-function collectCollectible(player, banane) {
-	banane.disableBody(true,true)
+function collectCollectible(bananes, player) {
+	bananes.disableBody(true,true)
 	score+= 10;
 	scoreText.setText("score : "+score);
-	if (bananes.countActive(true)=== 0) {
-		bananes.children.iterate(function(child){
-		  child.enableBody(true, child.x, 0, true, true);
-		});
+	if (score > 40) {
 		var x = (player.x<400)? Phaser.Math.Between(400,800) : Phaser.Math.Between(0,400);
 		var bombe = bombes.create(x, 16, "bombes");
 		bombe.setBounce(1);
@@ -239,7 +230,11 @@ function collectCollectible(player, banane) {
 	}
 }
 
+
+
 function update(){
+
+	bananes.anims.play("bananeAnim", true);
 
 /* anime groupe
 
