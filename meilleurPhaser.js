@@ -198,6 +198,8 @@ setXY: {x: 12, y: 0, stepX: 70}
 });
 
 
+
+
 	this.physics.add.overlap(player, ennemi);
 
 	bombes = this.physics.add.group();
@@ -239,8 +241,7 @@ function collectCollectible(player, banane) {
 
 function update(){
 
-
-
+/* anime groupe
 
 /* Lorsque l'ennemi rentre en collision avec une surface change de direction
 setVeolictyX a lui attribuer pour qu'il se déplace avec l'animation lié (avec setFlipX comme pour le joueur ) => le tout similaire au joueur*/
