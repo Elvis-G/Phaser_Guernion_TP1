@@ -7,7 +7,7 @@ var config = {
 		default: "arcade",
 		arcade: {
 		gravity: {y: 300},
-			debug: false
+			debug: true
 		}
 	},
 	scene: {
@@ -26,20 +26,32 @@ function init(){
 	var platforms;
 	var player;
 	var ennemi1;
+	var ennemi2;
+	var ennemi3;
 	var bananes;
 
 	var scoreText;
 	var pointDeVieText;
 	var projectiles;
 	var timerEnnemi1;
+	var timerEnnemi2;
+	var timerEnnemi3;
 
 }
-var aleatoire = 4;
+var aleatoire1 = 4;
+var aleatoire2 = 4;
+var aleatoire3 = 4;
+var ennemi1Disparais = 0;
+var ennemi2Disparais = 0;
+var ennemi3Disparais = 0;
+var mouvEn1 = 0;
+var mouvEn2 = 0;
+var mouvEn3 = 0;
+
 var score = 0;
 var compteurSaut = 0;
 var pointDeVie = 3;
-var mouvEn = 0;
-var ennemi1Disparais = 0;
+
 var invincible = 0;
 var timerInvincible;
 
@@ -147,8 +159,14 @@ function create(){
 	platforms.create(543,66,"Bloc_Or").setScale(1).refreshBody();
 
 
-// UN TIMER DEPLACEMENT ENNEMI
-timerEnnemi1 = this.time.addEvent({ delay: 3000, callback: aleatoireFunction, loop: true });
+// UN TIMER DEPLACEMENT ENNEMI 1
+timerEnnemi1 = this.time.addEvent({ delay: 2000, callback: aleatoireFunction1, loop: true });
+
+// UN TIMER DEPLACEMENT ENNEMI 2
+timerEnnemi2 = this.time.addEvent({ delay: 2000, callback: aleatoireFunction2, loop: true });
+
+// UN TIMER DEPLACEMENT ENNEMI 3
+timerEnnemi3 = this.time.addEvent({ delay: 2000, callback: aleatoireFunction3, loop: true });
 
 // TIMER INVINCIBLE
 timerInvincible = this.time.addEvent({ delay: 2000, callback: invincibleFunction, loop: true });
@@ -162,12 +180,27 @@ player.body.setGravityY(300);
 
 cursors = this.input.keyboard.createCursorKeys();
 
-// L'ENNEMI
+// L'ENNEMI 1
 ennemi1 = this.physics.add.sprite(400,420,"ennemiidle");
 ennemi1.setCollideWorldBounds(true);
 this.physics.add.collider(ennemi1, platforms).name = 'ennemi1_collid';
 ennemi1.setBounce(0);
 ennemi1.body.setGravityY(300);
+
+// L'ENNEMI 2
+ennemi2 = this.physics.add.sprite(60,270,"ennemiidle");
+ennemi2.setCollideWorldBounds(true);
+this.physics.add.collider(ennemi2, platforms).name = 'ennemi2_collid';
+ennemi2.setBounce(0);
+ennemi2.body.setGravityY(300);
+
+// L'ENNEMI 3
+ennemi3 = this.physics.add.sprite(450,210,"ennemiidle");
+ennemi3.setCollideWorldBounds(true);
+this.physics.add.collider(ennemi3, platforms).name = 'ennemi3_collid';
+ennemi3.setBounce(0);
+ennemi3.body.setGravityY(300);
+
 
 // LES COLLECTIBLES
  bananes = this.physics.add.sprite(543,32,"bananeidle");
@@ -251,7 +284,9 @@ frameRate: 20,
 repeat:-1
 });
 
-	this.physics.add.collider(player, ennemi1, hitEnnemi, null, this);
+	this.physics.add.collider(player, ennemi1, hitEnnemi1, null, this);
+	this.physics.add.collider(player, ennemi2, hitEnnemi2, null, this);
+	this.physics.add.collider(player, ennemi3, hitEnnemi3, null, this);
 
 	projectiles = this.physics.add.group();
 	this.physics.add.collider(projectiles, platforms, projectileplateforms, null, this);
@@ -287,7 +322,7 @@ function hitprojectile (player, projectile) {
 }
 
 // tue l'ennemi en lui sautant dessus ++ perd un pv si vous ne lui sautez pas dessus
-function hitEnnemi (player, ennemi1) {
+function hitEnnemi1 (player, ennemi1) {
 	if (pointDeVie == 0) {
 		this.physics.pause();
 		player.setTint(0xff0000);
@@ -303,32 +338,115 @@ function hitEnnemi (player, ennemi1) {
 		ennemi1Disparais = 1;
 	}	else if (player.body.center.y >= ennemi1.body.center.y-10) {
 	player.anims.play("degatsPris", true);
-	if (invincible == 0) {
-	pointDeVie-= 1;
-	invincible = 1;
-	pointDeVieText.setText("PV : "+pointDeVie);
+		if (invincible == 0) {
+		pointDeVie-= 1;
+		invincible = 1;
+		pointDeVieText.setText("PV : "+pointDeVie);
+		}
 	}
 }
+
+function hitEnnemi2 (player, ennemi2) {
+	if (pointDeVie == 0) {
+		this.physics.pause();
+		player.setTint(0xff0000);
+		player.anims.play("base");
+		ennemi2Disparais = 1;
+		ennemi2.anims.play("baseEnnemi");
+	} else if (player.body.center.y < ennemi2.body.center.y) {
+	ennemi2.anims.play("mortennemi");
+	ennemi2.setCollideWorldBounds(false);
+	this.physics.world.colliders.getActive().find(function(i){
+	    return i.name == 'ennemi2_collid'
+	}).destroy();
+	ennemi2Disparais = 1;
+}	else if (player.body.center.y >= ennemi2.body.center.y-10) {
+player.anims.play("degatsPris", true);
+		if (invincible == 0) {
+		pointDeVie-= 1;
+		invincible = 1;
+		pointDeVieText.setText("PV : "+pointDeVie);
+		}
+	}
 }
 
-// creation projectile
-function projectileFunction(){
+function hitEnnemi3 (player, ennemi3) {
+	if (pointDeVie == 0) {
+		this.physics.pause();
+		player.setTint(0xff0000);
+		player.anims.play("base");
+		ennemi3Disparais = 1;
+		ennemi3.anims.play("baseEnnemi");
+	} else if (player.body.center.y < ennemi3.body.center.y) {
+	ennemi3.anims.play("mortennemi");
+	ennemi3.setCollideWorldBounds(false);
+	this.physics.world.colliders.getActive().find(function(i){
+	    return i.name == 'ennemi3_collid'
+	}).destroy();
+	ennemi3Disparais = 1;
+}	else if (player.body.center.y >= ennemi3.body.center.y-10) {
+player.anims.play("degatsPris", true);
+		if (invincible == 0) {
+		pointDeVie-= 1;
+		invincible = 1;
+		pointDeVieText.setText("PV : "+pointDeVie);
+		}
+	}
+}
+
+// creation projectile ennemi 1
+function projectileFunction1(){
 		var x = (ennemi1.body.center.x, ennemi1.body.center.y);
-		if (mouvEn == 0) {
+		if (mouvEn1 == 0) {
 			var projectile = projectiles.create((ennemi1.body.center.x-17), (ennemi1.body.center.y+3), "ennemiprojectile");
 			projectile.body.setGravityY(-300);
 			projectile.setVelocityX(-130);
-			mouvEn = 2;
-			aleatoire = 4;
-	} else if (mouvEn == 1) {
+			mouvEn1 = 2;
+			aleatoire1 = 4;
+	} else if (mouvEn1 == 1) {
 			var projectile = projectiles.create((ennemi1.body.center.x+17), (ennemi1.body.center.y+3), "ennemiprojectile");
 			projectile.body.setGravityY(-300);
 			projectile.setVelocityX(130);
-			mouvEn = 2;
-			aleatoire = 4;
+			mouvEn1 = 2;
+			aleatoire1 = 4;
 	}
 }
 
+// creation projectile ennemi 2
+function projectileFunction2(){
+		var x = (ennemi2.body.center.x, ennemi2.body.center.y);
+		if (mouvEn2 == 0) {
+			var projectile = projectiles.create((ennemi2.body.center.x-17), (ennemi2.body.center.y+3), "ennemiprojectile");
+			projectile.body.setGravityY(-300);
+			projectile.setVelocityX(-130);
+			mouvEn2 = 2;
+			aleatoire2 = 4;
+	} else if (mouvEn2 == 1) {
+			var projectile = projectiles.create((ennemi2.body.center.x+17), (ennemi2.body.center.y+3), "ennemiprojectile");
+			projectile.body.setGravityY(-300);
+			projectile.setVelocityX(130);
+			mouvEn2 = 2;
+			aleatoire2 = 4;
+	}
+}
+
+// creation projectile ennemi 3
+function projectileFunction3(){
+		var x = (ennemi3.body.center.x, ennemi3.body.center.y);
+		if (mouvEn3 == 0) {
+			var projectile = projectiles.create((ennemi3.body.center.x-17), (ennemi3.body.center.y+3), "ennemiprojectile");
+			projectile.body.setGravityY(-300);
+			projectile.setVelocityX(-130);
+			mouvEn3 = 2;
+			aleatoire3 = 4;
+	} else if (mouvEn3 == 1) {
+			var projectile = projectiles.create((ennemi3.body.center.x+17), (ennemi3.body.center.y+3), "ennemiprojectile");
+			projectile.body.setGravityY(-300);
+			projectile.setVelocityX(130);
+			mouvEn3 = 2;
+			aleatoire3 = 4;
+	}
+}
 // la recolte
 function collectCollectible(bananes, player) {
 	bananes.anims.play("collecteBananeAnim", true);
@@ -342,8 +460,16 @@ function collectCollectible(bananes, player) {
 }
 
 // generation chiffre pour le déplacement de l'ennemi
-function aleatoireFunction () {
-	return aleatoire = Phaser.Math.Between(1,4);
+function aleatoireFunction1 () {
+	return aleatoire1 = Phaser.Math.Between(1,4);
+}
+
+function aleatoireFunction2 () {
+	return aleatoire2 = Phaser.Math.Between(1,4);
+}
+
+function aleatoireFunction3 () {
+	return aleatoire3 = Phaser.Math.Between(1,4);
 }
 
 // function d'invinciblité après avoir pris un dégat
@@ -356,32 +482,96 @@ function update(){
 // animations bananes
 	bananes.anims.play("bananeAnim", true);
 
-
+// ENNEMI 1 MOUVEMENT (celui du bas)
 if (ennemi1Disparais == 0) {
-if (aleatoire == 1) {
+if (aleatoire1 == 1) {
 	ennemi1.anims.play("attackEnnemi", true);
-	projectileFunction();
-} else if (aleatoire == 2) {
+	projectileFunction1();
+} else if (aleatoire1 == 2) {
 	ennemi1.setVelocityX(-80);
 	ennemi1.anims.play("runEnnemi", true);
 	ennemi1.setFlipX(false);
-	mouvEn=0;
+	mouvEn1=0;
 	// lorsque l'ennemi s'approche des bordures, change de direction
-	if (ennemi1.body.center.x < 40){
-		aleatoire = 3;
+	if (ennemi1.body.center.x < 360){
+		aleatoire1 = 3;
 	}
-} else if (aleatoire == 3) {
+} else if (aleatoire1 == 3) {
 	ennemi1.setVelocityX(80);
 	ennemi1.anims.play("runEnnemi", true);
 	ennemi1.setFlipX(true);
-	mouvEn=1;
+	mouvEn1=1;
 	// lorsque l'ennemi s'approche des bordures, change de direction
-	if (ennemi1.body.center.x > 560){
-		aleatoire = 2;
+	if (ennemi1.body.center.x > 550){
+		aleatoire1 = 2;
 	}
-} else if (aleatoire == 4) {
+} else if (aleatoire1 == 4) {
 	ennemi1.setVelocityX(0);
 	ennemi1.anims.play("baseEnnemi", true);
+}
+}
+
+// ENNEMI 2 MOUVEMENT (celui du milieu)
+if (ennemi2Disparais == 0) {
+if (aleatoire2 == 1) {
+	ennemi2.anims.play("attackEnnemi", true);
+	projectileFunction2();
+	if (ennemi2.body.center.x > 190){
+		aleatoire2 = 4;
+	}
+} else if (aleatoire2 == 2) {
+	ennemi2.setVelocityX(-80);
+	ennemi2.anims.play("runEnnemi", true);
+	ennemi2.setFlipX(false);
+	mouvEn2=0;
+	// lorsque l'ennemi s'approche des bordures, change de direction
+	if (ennemi2.body.center.x < 50){
+		aleatoire2 = 3;
+	}
+} else if (aleatoire2 == 3) {
+	ennemi2.setVelocityX(80);
+	ennemi2.anims.play("runEnnemi", true);
+	ennemi2.setFlipX(true);
+	mouvEn2=1;
+	// lorsque l'ennemi s'approche des bordures, change de direction
+	if (ennemi2.body.center.x > 190){
+		aleatoire2 = 2;
+	}
+} else if (aleatoire2 == 4) {
+	ennemi2.setVelocityX(0);
+	ennemi2.anims.play("baseEnnemi", true);
+}
+}
+
+// ENNEMI 3 MOUVEMENT (le plus haut)
+if (ennemi3Disparais == 0) {
+if (aleatoire3 == 1) {
+	ennemi3.anims.play("attackEnnemi", true);
+	projectileFunction3();
+	if (ennemi3.body.center.x < 365){
+		aleatoire3 = 4;
+	}
+} else if (aleatoire3 == 2) {
+	ennemi3.setVelocityX(-80);
+	ennemi3.anims.play("runEnnemi", true);
+	ennemi3.setFlipX(false);
+	mouvEn3=0;
+	// lorsque l'ennemi s'approche des bordures, change de direction
+	if (ennemi3.body.center.x < 365){
+		aleatoire3 = 3;
+	}
+} else if (aleatoire3 == 3) {
+	ennemi3.setVelocityX(80);
+	ennemi3.anims.play("runEnnemi", true);
+	ennemi3.setFlipX(true);
+	mouvEn3=1;
+	// lorsque l'ennemi s'approche des bordures, change de direction
+	if (ennemi3.body.center.x > 505){
+		aleatoire3 = 2;
+	}
+} else if (aleatoire3 == 4) {
+	ennemi3.setVelocityX(0);
+	ennemi3.anims.play("baseEnnemi", true);
 }
 }
 
@@ -402,7 +592,6 @@ if (aleatoire == 1) {
 	if (cursors.up.isDown && player.body.touching.down && compteurSaut == 0){
 			player.setVelocityY(-280);
 			player.anims.play("saut", true);
-			compteurSaut = 1;
 	}
 	// Préparation double jump
 	if (cursors.up.isUp && !player.body.touching.down && compteurSaut == 1){
