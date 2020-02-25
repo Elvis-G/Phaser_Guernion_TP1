@@ -295,7 +295,7 @@ repeat:-1
 	this.physics.add.collider(bananes, platforms);
 	this.physics.add.overlap(bananes, player, collectCollectible, null, this);
 
-	scoreText = this.add.text(10, 10, "score : 0", {fontSize: "16px", fill:'#fff'});
+	scoreText = this.add.text(10, 10, "Niveau en cours", {fontSize: "16px", fill:'#fff'});
 	pointDeVieText = this.add.text(530, 10, "PV : 3", {fontSize: "16px", fill:'#fff'});
 }
 
