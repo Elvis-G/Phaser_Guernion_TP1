@@ -150,7 +150,7 @@ function create(){
 // Les 2 carrés
 	platforms.create(350,100,"3_Carre1").setScale(1).refreshBody();
 // Plateforme Fine Haut
-	platforms.create(450,55,"Plat_Fine").setScale(1).refreshBody();
+	platforms.create(440,55,"Plat_Fine").setScale(1).refreshBody();
 // Bloc de Pierre en Haut à droite
 	platforms.create(583,82,"Bloc_Droite1").setScale(1).refreshBody();
 	platforms.create(567,82,"Bloc_Droite2").setScale(1).refreshBody();
@@ -452,7 +452,7 @@ function collectCollectible(bananes, player) {
 	bananes.anims.play("collecteBananeAnim", true);
 	bananes.disableBody(true,true)
 	score+= 10;
-	scoreText.setText("score : "+score);
+	scoreText.setText("VICTOIRE + GAIN PV");
 	if (score == 10){
 		pointDeVie+= 1;
 		pointDeVieText.setText("PV : "+pointDeVie);
