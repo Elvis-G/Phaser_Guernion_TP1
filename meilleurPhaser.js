@@ -7,7 +7,7 @@ var config = {
 		default: "arcade",
 		arcade: {
 		gravity: {y: 300},
-			debug: true
+			debug: false
 		}
 	},
 	scene: {
@@ -329,7 +329,7 @@ function hitEnnemi1 (player, ennemi1) {
 		player.anims.play("base");
 		ennemi1Disparais = 1;
 		ennemi1.anims.play("baseEnnemi");
-	} else if (player.body.center.y < ennemi1.body.center.y) {
+	} else if (player.body.center.y+30 < ennemi1.body.center.y) {
 		ennemi1.anims.play("mortennemi");
 		ennemi1.setCollideWorldBounds(false);
 		this.physics.world.colliders.getActive().find(function(i){
@@ -353,7 +353,7 @@ function hitEnnemi2 (player, ennemi2) {
 		player.anims.play("base");
 		ennemi2Disparais = 1;
 		ennemi2.anims.play("baseEnnemi");
-	} else if (player.body.center.y < ennemi2.body.center.y) {
+	} else if (player.body.center.y+30 < ennemi2.body.center.y) {
 	ennemi2.anims.play("mortennemi");
 	ennemi2.setCollideWorldBounds(false);
 	this.physics.world.colliders.getActive().find(function(i){
@@ -377,7 +377,7 @@ function hitEnnemi3 (player, ennemi3) {
 		player.anims.play("base");
 		ennemi3Disparais = 1;
 		ennemi3.anims.play("baseEnnemi");
-	} else if (player.body.center.y < ennemi3.body.center.y) {
+	} else if (player.body.center.y+30 < ennemi3.body.center.y) {
 	ennemi3.anims.play("mortennemi");
 	ennemi3.setCollideWorldBounds(false);
 	this.physics.world.colliders.getActive().find(function(i){
@@ -592,6 +592,7 @@ if (aleatoire3 == 1) {
 	if (cursors.up.isDown && player.body.touching.down && compteurSaut == 0){
 			player.setVelocityY(-280);
 			player.anims.play("saut", true);
+			compteurSaut = 1;
 	}
 	// Préparation double jump
 	if (cursors.up.isUp && !player.body.touching.down && compteurSaut == 1){
@@ -604,9 +605,9 @@ if (aleatoire3 == 1) {
 		}
 		// double jump
 	if (compteurSaut == 2 && !player.body.touching.down && cursors.up.isDown) {
-		player.setVelocityY(-280);
+			player.setVelocityY(-280);
 			player.anims.play("doubleSaut", true);
-		compteurSaut = 3;
+			compteurSaut = 3;
 	}
 
 	// restart le jump si pas de double jump
