@@ -7,7 +7,7 @@ var config = {
 		default: "arcade",
 		arcade: {
 		gravity: {y: 300},
-			debug: false
+			debug: true
 		}
 	},
 	scene: {
@@ -93,15 +93,15 @@ function preload(){
 	this.load.spritesheet("bananerecup", "Assets/PixelAdventure1/Items/Fruits/Collected.png",
 	{frameWidth: 32, frameHeight:32});
 	// Animations Perso joueur
-	this.load.spritesheet("persoidle", "Assets/PixelAdventure1/MainCharacters/NinjaFrog/Idle.png",
+	this.load.spritesheet("persoidle", "Assets/PixelAdventure1/MainCharacters/NinjaFrog/RandomGuy_Idle.png",
 	{frameWidth: 32, frameHeight:32});
-	this.load.spritesheet("persorun", "Assets/PixelAdventure1/MainCharacters/NinjaFrog/Run.png",
+	this.load.spritesheet("persorun", "Assets/PixelAdventure1/MainCharacters/NinjaFrog/RandomGuy_Idle.png",
 	{frameWidth: 32, frameHeight:32});
-	this.load.spritesheet("persojump", "Assets/PixelAdventure1/MainCharacters/NinjaFrog/Jump.png",
+	this.load.spritesheet("persojump", "Assets/PixelAdventure1/MainCharacters/NinjaFrog/RandomGuy_Idle.png",
 	{frameWidth: 32, frameHeight:32});
-	this.load.spritesheet("persodoublejump", "Assets/PixelAdventure1/MainCharacters/NinjaFrog/DoubleJump.png",
+	this.load.spritesheet("persodoublejump", "Assets/PixelAdventure1/MainCharacters/NinjaFrog/RandomGuy_Idle.png",
 	{frameWidth: 32, frameHeight:32});
-	this.load.spritesheet("persohit", "Assets/PixelAdventure1/MainCharacters/NinjaFrog/Hit.png",
+	this.load.spritesheet("persohit", "Assets/PixelAdventure1/MainCharacters/NinjaFrog/RandomGuy_Idle.png",
 	{frameWidth: 32, frameHeight:32});
 	// Animations Ennemi
 	this.load.spritesheet("ennemiidle", "Assets/PixelAdventure1/Enemies/Trunk/Idle.png",
@@ -172,7 +172,7 @@ timerEnnemi3 = this.time.addEvent({ delay: 2000, callback: aleatoireFunction3, l
 timerInvincible = this.time.addEvent({ delay: 2000, callback: invincibleFunction, loop: true });
 
 // LE JOUEUR
-player = this.physics.add.sprite(30,420,"persoidle");
+player = this.physics.add.sprite(30,420,"persoidle").setSize(22,32).setScale(1);
 player.setCollideWorldBounds(true);
 this.physics.add.collider(player,platforms);
 player.setBounce(0);
@@ -181,21 +181,21 @@ player.body.setGravityY(300);
 cursors = this.input.keyboard.createCursorKeys();
 
 // L'ENNEMI 1
-ennemi1 = this.physics.add.sprite(400,420,"ennemiidle");
+ennemi1 = this.physics.add.sprite(400,420,"ennemiidle").setSize(40,32).setScale(1);
 ennemi1.setCollideWorldBounds(true);
 this.physics.add.collider(ennemi1, platforms).name = 'ennemi1_collid';
 ennemi1.setBounce(0);
 ennemi1.body.setGravityY(300);
 
 // L'ENNEMI 2
-ennemi2 = this.physics.add.sprite(60,270,"ennemiidle");
+ennemi2 = this.physics.add.sprite(60,270,"ennemiidle").setSize(42,32).setScale(1);
 ennemi2.setCollideWorldBounds(true);
 this.physics.add.collider(ennemi2, platforms).name = 'ennemi2_collid';
 ennemi2.setBounce(0);
 ennemi2.body.setGravityY(300);
 
 // L'ENNEMI 3
-ennemi3 = this.physics.add.sprite(450,210,"ennemiidle");
+ennemi3 = this.physics.add.sprite(450,210,"ennemiidle").setSize(40,32).setScale(1);
 ennemi3.setCollideWorldBounds(true);
 this.physics.add.collider(ennemi3, platforms).name = 'ennemi3_collid';
 ennemi3.setBounce(0);
